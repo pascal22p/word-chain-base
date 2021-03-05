@@ -1,5 +1,4 @@
 package wordchains
-import scala.annotation.tailrec
 import scala.io.Source
 
 object Main extends App {
@@ -24,7 +23,7 @@ object WordChain {
       case Some(nextWord) if nextWord == endWord => currentWord:: List(endWord)
       case None => List(currentWord)
       case Some(nextWord) => {
-        val dic = dictionary.filterNot(_ == nextWord).filterNot(_ == currentWord).filterNot(_ == currentWord)
+        val dic = dictionary.filterNot(_ == nextWord).filterNot(_ == currentWord)
         currentWord :: getNextWord(dic, nextWord, endWord)
       }
     }
