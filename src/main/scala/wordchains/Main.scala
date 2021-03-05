@@ -1,6 +1,5 @@
 package wordchains
 import scala.annotation.tailrec
-import scala.collection.immutable
 import scala.io.Source
 
 object Main extends App {
@@ -19,7 +18,6 @@ object WordChain {
     boolList.count(_ == false) == 1
   }
 
-  @tailrec
   def getNextWord(dictionary: List[String], currentWord: String, endWord: String): List[String] = {
     val nextWordOption = dictionary.find(countChanges(currentWord))
     nextWordOption match {
