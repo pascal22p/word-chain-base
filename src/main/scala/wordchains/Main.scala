@@ -1,4 +1,5 @@
 package wordchains
+import scala.collection.immutable
 import scala.io.Source
 
 object Main extends App {
@@ -10,5 +11,36 @@ object Main extends App {
 
 object WordChain {
 
-  def run(word1: String, word2: String, dictionary: List[String]): List[String] = ???
+  def countChanges(word: String)(ref: String): Boolean = {
+    val boolList = (word, ref).zipped.map { (c1, c2) =>
+      c1 == c2
+    }
+    boolList.count(_ == false) == 1
+  }
+
+  def getNextWord(dictionary: List[String], currentWord: String, endWord: String): List[String] = {
+    val nextWordOption = dictionary.find(countChanges(currentWord))
+    nextWordOption match {
+      case Some(nextWord) if nextWord == endWord => currentWord:: List(endWord)
+
+      case Some(nextWord) => {
+        val dic = dictionary.filterNot(_ == nextWord).filterNot(_ == currentWord).filterNot(_ == currentWord)
+        currentWord :: getNextWord(dic, nextWord, endWord)
+      }
+      case None => List(currentWord)
+    }
+  }
+
+  def run(word1: String, word2: String, dictionary: List[String]): List[String] = {
+    val nextWordOption = dictionary.find(countChanges(word1))
+    nextWordOption match {
+      case Some(nextWord) if nextWord == word2 => word1:: List(word2)
+
+      case Some(nextWord) => {
+        val dic = dictionary.filterNot(_ == nextWord).filterNot(_ == word1)
+        word1 :: run(nextWord, word2, dic)
+      }
+      case None => List(word1)
+    }
+  }
 }
